@@ -136,12 +136,18 @@ void waybar::modules::Custom::handleEvent() {
 }
 
 bool waybar::modules::Custom::handleScroll(GdkEventScroll* e) {
+  if (output_name_ != "") {
+    setenv("WAYBAR_OUTPUT_NAME", output_name_.c_str(), 1);
+  }
   auto ret = ALabel::handleScroll(e);
   handleEvent();
   return ret;
 }
 
 bool waybar::modules::Custom::handleToggle(GdkEventButton* const& e) {
+  if (output_name_ != "") {
+    setenv("WAYBAR_OUTPUT_NAME", output_name_.c_str(), 1);
+  }
   auto ret = ALabel::handleToggle(e);
   handleEvent();
   return ret;
