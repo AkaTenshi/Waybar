@@ -85,7 +85,8 @@ auto getInhibitors(const Json::Value& config) -> std::string {
   if (config["what"].isArray()) {
     inhibitors = checkInhibitor(config["what"][0].asString());
     for (decltype(config["what"].size()) i = 1; i < config["what"].size(); ++i) {
-      inhibitors += ":" + checkInhibitor(config["what"][i].asString());
+      inhibitors.append(":");
+      inhibitors.append(checkInhibitor(config["what"][i].asString()));
     }
     return inhibitors;
   }
@@ -103,7 +104,6 @@ Inhibitor::Inhibitor(const std::string& id, const Bar& bar, const Json::Value& c
       inhibitors_(::getInhibitors(config)) {
   event_box_.add_events(Gdk::BUTTON_PRESS_MASK);
   event_box_.signal_button_press_event().connect(sigc::mem_fun(*this, &Inhibitor::handleToggle));
-  dp.emit();
 }
 
 Inhibitor::~Inhibitor() {
@@ -123,7 +123,7 @@ auto Inhibitor::update() -> void {
   label_.get_style_context()->add_class(status_text);
 
   if (tooltipEnabled()) {
-    label_.set_tooltip_text(status_text);
+    label_.set_tooltip_markup(status_text);
   }
 
   return ALabel::update();
